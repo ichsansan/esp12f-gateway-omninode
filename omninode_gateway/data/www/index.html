@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Omni-Node Dashboard</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <!-- ═══ HEADER ═══ -->
+  <header id="app-header">
+    <div class="header-left">
+      <span class="logo">&gt;_</span>
+      <h1>OMNI-NODE</h1>
+    </div>
+    <div class="header-right">
+      <span id="hdr-time" class="mono">--:--:--</span>
+      <span id="hdr-status" class="badge badge-off">OFFLINE</span>
+    </div>
+  </header>
+
+  <!-- ═══ NAV TABS ═══ -->
+  <nav id="tabs">
+    <button class="tab active" data-tab="dashboard">Dashboard</button>
+    <button class="tab" data-tab="network">Network</button>
+    <button class="tab" data-tab="mqtt">MQTT</button>
+    <button class="tab" data-tab="io">IO Pins</button>
+    <button class="tab" data-tab="system">System</button>
+  </nav>
+
+  <!-- ═══ MAIN CONTENT ═══ -->
+  <main id="content">
+
+    <!-- ── Dashboard ─────────────────────────────────── -->
+    <section id="tab-dashboard" class="tab-panel active">
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-label">Device ID</div>
+          <div class="card-value" id="dash-device">—</div>
+        </div>
+        <div class="card">
+          <div class="card-label">WiFi IP</div>
+          <div class="card-value" id="dash-ip">—</div>
+        </div>
+        <div class="card">
+          <div class="card-label">RSSI</div>
+          <div class="card-value" id="dash-rssi">— dBm</div>
+        </div>
+        <div class="card">
+          <div class="card-label">MQTT</div>
+          <div class="card-value" id="dash-mqtt">—</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Uptime</div>
+          <div class="card-value" id="dash-uptime">—</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Free Heap</div>
+          <div class="card-value" id="dash-heap">—</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Firmware</div>
+          <div class="card-value" id="dash-fw">—</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Mode</div>
+          <div class="card-value" id="dash-mode">—</div>
+        </div>
+      </div>
+
+      <h2 class="section-title">Live IO Readings</h2>
+      <div id="live-io" class="card-grid">
+        <p class="mono" style="grid-column:1/-1;text-align:center;">Waiting for data…</p>
+      </div>
+    </section>
+
+    <!-- ── Network ───────────────────────────────────── -->
+    <section id="tab-network" class="tab-panel">
+      <h2 class="section-title">Network Configuration</h2>
+      <form id="form-network" class="form-grid">
+        <label>SSID
+          <input type="text" id="net-ssid" maxlength="63" placeholder="Your WiFi SSID">
+        </label>
+        <label>Password
+          <input type="password" id="net-pass" maxlength="63" placeholder="WiFi Password">
+        </label>
+        <label class="checkbox-row">
+          <input type="checkbox" id="net-static">
+          <span>Static IP</span>
+        </label>
+        <label>IP Address
+          <input type="text" id="net-ip" placeholder="192.168.1.100" disabled>
+        </label>
+        <label>Subnet Mask
+          <input type="text" id="net-subnet" placeholder="255.255.255.0" disabled>
+        </label>
+        <label>Gateway
+          <input type="text" id="net-gw" placeholder="192.168.1.1" disabled>
+        </label>
+        <label>DNS 1
+          <input type="text" id="net-dns1" value="8.8.8.8">
+        </label>
+        <label>DNS 2
+          <input type="text" id="net-dns2" value="1.1.1.1">
+        </label>
+        <button type="submit" class="btn btn-save">SAVE NETWORK</button>
+      </form>
+    </section>
+
+    <!-- ── MQTT ──────────────────────────────────────── -->
+    <section id="tab-mqtt" class="tab-panel">
+      <h2 class="section-title">MQTT Configuration</h2>
+      <form id="form-mqtt" class="form-grid">
+        <label>Broker Address
+          <input type="text" id="mqtt-broker" placeholder="192.168.1.50">
+        </label>
+        <label>Port
+          <input type="number" id="mqtt-port" value="1883" min="1" max="65535">
+        </label>
+        <label>Username
+          <input type="text" id="mqtt-user" placeholder="(optional)">
+        </label>
+        <label>Password
+          <input type="password" id="mqtt-pass" placeholder="(optional)">
+        </label>
+        <label>Topic Prefix
+          <input type="text" id="mqtt-prefix" placeholder="nodes/01">
+        </label>
+        <label>LWT Sub-Topic
+          <input type="text" id="mqtt-lwt" value="status">
+        </label>
+        <button type="submit" class="btn btn-save">SAVE MQTT</button>
+      </form>
+    </section>
+
+    <!-- ── IO Pins ───────────────────────────────────── -->
+    <section id="tab-io" class="tab-panel">
+      <h2 class="section-title">IO Pin Mapping</h2>
+      <div id="io-list"></div>
+      <button id="btn-add-pin" class="btn btn-accent" type="button">+ ADD PIN</button>
+      <button id="btn-save-io" class="btn btn-save" type="button" style="margin-left:8px">SAVE IO</button>
+    </section>
+
+    <!-- ── System ────────────────────────────────────── -->
+    <section id="tab-system" class="tab-panel">
+      <h2 class="section-title">System Settings</h2>
+      <form id="form-system" class="form-grid">
+        <label>Device ID
+          <input type="text" id="sys-device-id" maxlength="15">
+        </label>
+        <label>Web Password
+          <input type="password" id="sys-web-pass" maxlength="31">
+        </label>
+        <label>Poll Interval (ms)
+          <input type="number" id="sys-poll" min="500" max="60000" step="100">
+        </label>
+        <button type="submit" class="btn btn-save">SAVE SYSTEM</button>
+      </form>
+
+      <h2 class="section-title" style="margin-top:24px">Firmware Update (OTA)</h2>
+      <form id="form-ota" class="form-grid">
+        <label>Upload .bin file
+          <input type="file" id="ota-file" accept=".bin">
+        </label>
+        <div id="ota-progress" class="progress-bar" style="display:none">
+          <div class="progress-fill" id="ota-fill"></div>
+        </div>
+        <button type="submit" class="btn btn-accent">UPLOAD FIRMWARE</button>
+      </form>
+
+      <h2 class="section-title" style="margin-top:24px">Danger Zone</h2>
+      <div class="danger-zone">
+        <button id="btn-restart" class="btn btn-warn" type="button">RESTART DEVICE</button>
+        <button id="btn-factory" class="btn btn-danger" type="button">FACTORY RESET</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══ TOAST ═══ -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
